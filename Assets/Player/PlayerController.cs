@@ -11,21 +11,26 @@ public class PlayerController : MonoBehaviour {
     private Animator anim;
     private Rigidbody2D rb2d;
     private SpriteRenderer sr;
+    private Vector2 _velocity;
 
 	// Use this for initialization
 	void Start () {
         anim = GetComponentInChildren<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
+
+        _velocity = Vector2.zero;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        _velocity = new Vector2(0, rb2d.velocity.y);
+
         if (Input.GetKey(KeyCode.A)) {
-            rb2d.AddForce(Vector2.left * speed);
+            _velocity.x = -speed;
             moving = true;
         } else if (Input.GetKey(KeyCode.D)) {
-            rb2d.AddForce(Vector2.right * speed);
+            _velocity.x = speed;
             moving = true;
         } else moving = false;
         
@@ -40,6 +45,7 @@ public class PlayerController : MonoBehaviour {
             sr.flipX = false;
         }
 
+        rb2d.velocity = new Vector2(_velocity.x, rb2d.velocity.y);
         anim.SetFloat("vspeed", rb2d.velocity.y);
         anim.SetBool("moving", moving);
     }
